@@ -1,0 +1,26 @@
+{
+    "id": "730A0C41",
+    "path": "~/R_learning_folder/R/sankey/sankey.R",
+    "project_path": null,
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1732272970692.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "182,34",
+        "scrollLine": "166"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1732063368,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1732063368,
+    "read_only": false,
+    "read_only_alternatives": []
+}

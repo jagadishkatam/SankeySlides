@@ -462,11 +462,11 @@ fig <- fig %>% layout(
 
 -   When hovered over a node, the label will display the node's category along with the number of subjects in that category (e.g.,).
 
-![](label1.png){fig-align="center" width="20%"}
+![](img/label1.png){fig-align="center"}
 
 -   When hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,).
 
-![](label2.png){fig-align="center" width="50%"}
+![](img/label2.png){fig-align="center"}
 
 <br/> <br/>
 
@@ -541,9 +541,10 @@ g <- ggplot(adae1, aes(y = n, axis1 = trta, axis2 = aesoc, axis3 = aedecod, axis
 
 ## ggalluvial (Cont.) {.title-slide .smaller}
 
-![](img/Rplot.png){fig-align="right"}
 
-<br/> <br/> <br/> <br/>
+![](img/Rplot.png){fig-align="center" width="100%" height='100%'}
+
+<br/> <br/>
 
 ## Comparison {.title-slide .smaller}
 
