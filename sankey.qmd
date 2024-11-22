@@ -678,6 +678,9 @@ Labels are fixed to the plot. We cannot hover to see additional information.
 <br/> <br/>
 
 ## Thank you! {.thank-you}
+
+[Presentation Link](https://jagadishkatam.github.io/SankeySlides/sankey.html)
+
 :::
 
 ::: {.column width="50%"}
