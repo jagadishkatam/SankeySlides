@@ -9,8 +9,6 @@
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-802d4ebb0f1c23f2190e1693b12b8eea.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.36">
 
-  <meta name="author" content="Jagadish Katam">
-  <meta name="dcterms.date" content="2025-01-20">
   <title>sankey – Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -195,16 +193,11 @@
 
 <section id="title-slide" class="quarto-title-block center">
   <h1 class="title">Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization</h1>
+  <p class="subtitle"><br><br><strong>Jagadish Katam</strong><br>Phuse Wednesday Webinar<br>January 29<br></p>
 
 <div class="quarto-title-authors">
-<div class="quarto-title-author">
-<div class="quarto-title-author-name">
-Jagadish Katam 
-</div>
-</div>
 </div>
 
-  <p class="date">2025-01-20</p>
 </section>
 <section id="backgroundrationalemotivation" class="slide level2 title-slide smaller center">
 <h2>Background/Rationale/Motivation</h2>
@@ -1136,7 +1129,7 @@ Jagadish Katam
 <p><br> <br></p>
 <section id="thank-you" class="slide level2 thank-you">
 <h2>Thank you!</h2>
-<p><a href="https://jagadishkatam.github.io/SankeySlides/sankey.html">Presentation Link</a></p>
+<p><a href="https://jagadishkatam.github.io/SankeySlides/sankey.html">Slides</a> <br> <br> <a href="https://example.com" target="_blank">Click Here</a></p>
 </section>
 </div><div class="column" style="width:50%;">
 <p><br> <br> <br> <br></p>
@@ -1309,7 +1302,7 @@ Jagadish Katam
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'slide',
+        transition: 'fade',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
@@ -1540,6 +1533,11 @@ Jagadish Katam
             if (link.dataset.originalHref !== undefined) {
               link.href = link.dataset.originalHref;
             }
+              // target, if specified
+              link.setAttribute("target", "_blank");
+              if (link.getAttribute("rel") === null) {
+                link.setAttribute("rel", "noopener");
+              }
           }
         }
       function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
