@@ -7,6 +7,7 @@ footer: "© 2024 Princeps Technologies All Rights Reserved."
 format: 
   revealjs:
     multiplex: true
+    preview-links: auto
     css: custom.css
     transition: slide
     background-transition: fade
