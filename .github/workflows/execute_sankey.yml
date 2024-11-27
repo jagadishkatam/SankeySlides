@@ -22,27 +22,17 @@ jobs:
         with:
           r-version: '4.2.0'
 
-    # Step 4: Install R dependencies
-      - name: Install packages
-        uses: r-lib/actions/setup-r-dependencies@v2
+      - name: Install R Dependencies
+        uses: r-lib/actions/setup-renv@v2
         with:
-          packages: |
-            any::tidyverse 
-            any::tidyCDISC
-            any::networkD3
-            any::plotly
-            any::ggalluvial
-            any::knitr
+          cache-version: 1
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: jagadishkatam-patch-1
-          GITHUB_EMAIL: jagadish.katam@gmail.com
-          GITHUB_USERNAME: jagadishkatam
-          path:  docs
-          render: true
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     # Step 5: Render Quarto script
       - name: Render Quarto Document
         run: |
