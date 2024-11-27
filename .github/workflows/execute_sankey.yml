@@ -40,7 +40,7 @@ jobs:
           target: main
           GITHUB_EMAIL: jagadish.katam@gmail.com
           GITHUB_USERNAME: jagadishkatam
-          path: .
+          path:  docs
           render: true
 
     # Step 5: Render Quarto script
