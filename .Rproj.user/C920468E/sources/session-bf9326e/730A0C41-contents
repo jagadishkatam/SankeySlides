@@ -3,6 +3,7 @@ library(dplyr)
 library(networkD3)
 library(plotly)
 library(ggplot2)
+library(gganimate)
 library(ggalluvial)
 library(tidyverse)
 
