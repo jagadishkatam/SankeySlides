@@ -38,8 +38,10 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_EMAIL: jagadish.katam@gmail.com
+          GITHUB_USERNAME: jagadishkatam
+          path: .
+          render: true
 
     # Step 5: Render Quarto script
       - name: Render Quarto Document
