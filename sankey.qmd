@@ -56,8 +56,6 @@ library(dplyr)
 library(networkD3)
 library(plotly)
 library(ggalluvial)
-library(gt)
-library(flextable)
 ```
 
 ```{r }
