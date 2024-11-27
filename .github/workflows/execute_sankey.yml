@@ -37,7 +37,7 @@ jobs:
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
-          target: main
+          target: jagadishkatam-patch-1
           GITHUB_EMAIL: jagadish.katam@gmail.com
           GITHUB_USERNAME: jagadishkatam
           path:  docs
