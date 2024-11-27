@@ -34,7 +34,13 @@ jobs:
             any::ggalluvial
             any::knitr
             any::formatR
-
+      
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: . # or your specific directory if different
+          destination: ./docs
+      
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
