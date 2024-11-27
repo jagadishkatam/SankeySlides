@@ -1,0 +1,188 @@
+library(tidyCDISC)
+library(dplyr)
+library(networkD3)
+library(plotly)
+library(ggplot2)
+library(ggalluvial)
+library(tidyverse)
+
+# networkD3 approach ------------------------------------------------------
+
+
+adae <- tidyCDISC::adae
+
+adae_filtered <- adae %>%
+  rename_all(tolower) %>%
+  filter(
+    saffl == "Y" &
+      trtemfl == "Y" &
+      aoccfl == "Y" &
+      cq01nam != ""
+  ) %>%
+  select(usubjid, aedecod, aesoc, aesev, trta) %>%
+  arrange(usubjid, aesoc, aedecod, trta, aesev) %>%
+  group_by(usubjid, aesoc, aedecod, trta) %>%
+  slice_tail(n = 1)
+
+# Function to create Sankey data
+create_sankey_data <- function(data, source_col, target_col) {
+  data %>%
+    select(usubjid, trta, aesoc, aedecod, aesev) %>%
+    unique() %>%
+    group_by(across(all_of(source_col)), across(all_of(target_col))) %>%
+    count() %>%
+    rename(source = !!sym(source_col), target = !!sym(target_col), value = n)
+}
+
+# Create Sankey data for each step
+adae1 <- create_sankey_data(adae_filtered, "trta", "aesoc")
+adae2 <- create_sankey_data(adae_filtered, "aesoc", "aedecod")
+adae3 <- create_sankey_data(adae_filtered, "aedecod", "aesev")
+
+all_adae <- bind_rows(adae1, adae2, adae3) %>%
+  as.data.frame() %>%
+  select(source, target, value)
+
+# Create a data frame for nodes
+nodes <-
+  data.frame(name = unique(
+    c(
+      adae_filtered$trta,
+      adae_filtered$aesoc,
+      adae_filtered$aedecod,
+      adae_filtered$aesev
+    )
+  ))
+
+all_adae$IDsource <- match(all_adae$source, nodes$name) - 1
+all_adae$IDtarget <- match(all_adae$target, nodes$name) - 1
+
+# Create a networkD3 Sankey plot
+sankey <- sankeyNetwork(
+  Links = all_adae,
+  Nodes = nodes,
+  Source = "IDsource",
+  Target = "IDtarget",
+  Value = "value",
+  NodeID = "name",
+  colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"),
+  fontSize = 15,
+  nodeWidth = 30,
+  sinksRight = T,
+  nodePadding = 7,
+  height = "900px",
+  width = "1600px",
+  LinkGroup = "target",
+  fontFamily = "Aerial"
+)
+
+# Display the plot
+sankey
+
+all_adae2 <- all_adae %>% mutate(source=trimws(str_replace(source,'Xanomeline','')))
+nodes2 <- nodes %>% mutate(name=trimws(str_replace(name,'Xanomeline','')))
+
+# Create a networkD3 Sankey plot
+sankey <- sankeyNetwork(
+  Links = all_adae2,
+  Nodes = nodes2,
+  Source = "IDsource",
+  Target = "IDtarget",
+  Value = "value",
+  NodeID = "name",
+  colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"),
+  fontSize = 15,
+  nodeWidth = 30,
+  sinksRight = T,
+  nodePadding = 7,
+  height = "900px",
+  width = "1600px",
+  LinkGroup = "target",
+  fontFamily = "Aerial"
+)
+
+# Display the plot
+sankey
+
+
+# plotly approach  --------------------------------------------------------
+
+
+
+library(plotly)
+
+fig <- plot_ly(
+  type = "sankey",
+  domain = list(
+    x = c(0, 1),
+    y = c(0, 1)
+  ),
+  orientation = "h",
+  valueformat = ".0f",
+  valuesuffix = "TWh",
+  node = list(
+    label = nodes$name,
+    pad = 15,
+    thickness = 15,
+    line = list(
+      color = "black",
+      width = 0.5
+    ),
+    font = list(
+      color = "black", # Node font color
+      size = 20
+    )
+  ),
+  link = list(
+    source = all_adae$IDsource,
+    target = all_adae$IDtarget,
+    value = all_adae$value
+  )
+)
+
+fig <- fig %>% layout(
+  # title = "Sankey Diagram",
+  font = list(
+    size = 15,
+    color = "black",
+    shadow = "auto"
+  ),
+  xaxis = list(showgrid = F, zeroline = F),
+  yaxis = list(showgrid = F, zeroline = F)
+)
+
+fig
+
+
+
+# ggalluvial approach -----------------------------------------------------
+
+
+
+adae1 <- adae_filtered %>%
+  rename_all(tolower) %>%
+  select(usubjid, aesoc, aedecod, trta, aesev) %>%
+  unique() %>%
+  group_by(aesoc, aedecod, trta, aesev) %>%
+  count()
+
+str(adae1)
+
+g <- ggplot(adae1, aes(y = n, axis1 = trta, axis2 = aesoc, axis3 = aedecod, axis4 = aesev)) +
+  geom_alluvium(aes(fill = as.factor(trta)), width = 4 / 12) +
+  geom_stratum(alpha = .5, fill = "white") +
+  geom_text(stat = "stratum", size = 2.5, color = "black", fontface = "bold", aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("Treatment", "SOC", "Preferred Term", "Severity"), expand = c(0.1, 0.1)) +
+  theme_classic() +
+  guides(fill = guide_legend(title = "Teatment:")) +
+  theme(
+    axis.title.y = element_blank(), # Remove y-axis title
+    axis.text.y = element_blank(), # Remove y-axis text
+    axis.ticks.y = element_blank(), # Remove y-axis ticks
+    axis.line.y = element_blank(),
+    axis.line.x = element_blank(),
+    axis.text = element_text(size = 12)
+  )
+
+
+g

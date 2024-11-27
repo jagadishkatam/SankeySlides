@@ -1,0 +1,692 @@
+---
+title: "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization"
+subtitle: '     '
+date: '20-Jan-2025'
+author: "Jagadish Katam"
+footer: "© 2024 Princeps Technologies All Rights Reserved."
+format: 
+  revealjs:
+    multiplex: true
+    preview-links: auto
+    css: custom.css
+    transition: slide
+    background-transition: fade
+    highlight-style: ayu-mirage
+from: markdown+emoji
+execute:
+  echo: true
+  freeze: auto
+editor: visual
+---
+
+## Background/Rationale/Motivation {.title-slide .smaller}
+
+<br/>
+
+::: {style="font-size: 25px"}
+-   In the context of a Sankey chart, nodes and links are fundamental concepts that help visualize flows or relationships between categories or entities.
+
+<br/>
+
+-   Nodes: Nodes are the entities or categories in your data that you want to visualize. In the context of adverse events data (ADAE dataset), nodes could represent different categories such as:
+
+    -   TRTA: Actual Treatment
+    -   AESOC: Adverse event system organ class
+    -   AEDECOD: Preferred term
+    -   AESEV: Adverse event severity
+
+<br/>
+
+-   Links represent the flows or relationships between nodes. In a Sankey diagram, links connect two nodes and show the flow from one category to another.
+:::
+
+<br/>
+
+------------------------------------------------------------------------
+
+## ADAE {.title-slide .smaller}
+
+<br/>
+
+```{r}
+#| echo: false
+#| code-line-numbers: false
+#| tidy: true
+
+library(tidyCDISC)
+library(dplyr)
+library(networkD3)
+library(plotly)
+library(ggalluvial)
+library(gt)
+library(flextable)
+```
+
+```{r }
+#| echo: true
+#| code-line-numbers: false
+#| tidy: true
+
+adae <- tidyCDISC::adae
+
+adae_filtered <- adae %>%
+  rename_all(tolower) %>%
+  filter(
+    saffl == "Y" &
+      trtemfl == "Y" &
+      aoccfl == "Y" &
+      cq01nam!=''
+  ) %>%
+  select(usubjid, aedecod, aesoc, aesev, trta) %>%
+  arrange(usubjid, aesoc, aedecod, trta, aesev) %>%
+  group_by(usubjid, aesoc, aedecod, trta) %>%
+  slice_tail(n = 1) 
+```
+
+<br>
+
+::: {style="font-size: 0.50em"}
+```{r}
+#| echo: false
+knitr::kable(adae_filtered %>% head(10))
+#flextable(adae_filtered %>% head(n=10))
+#gt::gt_preview(adae_filtered %>% head(n=5))
+```
+:::
+
+::: {.absolute top="0" left="100%"}
+:::
+
+<br> <br> ---
+
+## Getting data in Shape {.title-slide .smaller}
+
+<br/>
+
+::: columns
+::: {.column width="50%" style="font-size: 20px"}
+```{r}
+#| echo: true
+#| code-line-numbers: false
+#| tidy: true
+create_sankey_data <- function(data, source_col, target_col) {
+  data %>%
+    select(usubjid, trta, aesoc, aedecod, aesev) %>%
+    unique() %>%
+    group_by(across(all_of(source_col)), across(all_of(target_col))) %>%
+    count() %>%
+    rename(source = !!sym(source_col), target = !!sym(target_col), value = n)
+}
+```
+:::
+
+::: {.column width="50%" style="font-size: 25px"}
+```{r}
+#| echo: true
+#| code-line-numbers: false
+#| tidy: true
+adae1 <- create_sankey_data(adae_filtered, "trta", "aesoc")
+adae2 <- create_sankey_data(adae_filtered, "aesoc", "aedecod")
+adae3 <- create_sankey_data(adae_filtered, "aedecod", "aesev")
+
+all_adae <- bind_rows(adae1, adae2, adae3) %>% as.data.frame() %>% 
+  select(source, target, value)
+```
+:::
+:::
+
+<br/>
+
+::: {style="font-size: 0.50em"}
+```{r}
+#| echo: false
+knitr::kable(all_adae %>% head(10))
+```
+:::
+
+<br> <br>
+
+------------------------------------------------------------------------
+
+## Getting data in Shape (cont.), node data frame {.title-slide .smaller}
+
+<br/>
+
+::: columns
+::: {.column width="40%"}
+```{r}
+#| echo: true
+#| code-line-numbers: false
+
+nodes <-
+  data.frame(
+    name = unique(
+    c(adae_filtered$trta,
+      adae_filtered$aesoc,
+      adae_filtered$aedecod,
+      adae_filtered$aesev
+    )
+  ))
+```
+
+<br/>
+
+::: {style="font-size: 25px"}
+-   Creating Nodes Data Frame
+-   We need the nodes dataset to pass into the sankeyNetwork function.
+-   Matching Source and Target IDs
+-   Assign unique IDs to the source and target nodes.
+:::
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="55%"}
+::: {style="font-size: 0.50em"}
+```{r}
+#| echo: false
+knitr::kable(nodes )
+```
+:::
+:::
+:::
+
+<br> <br>
+
+------------------------------------------------------------------------
+
+## Generate the final data frame to generate Sankey {.title-slide .smaller}
+
+<br/>
+
+```{r}
+#| echo: true
+#| code-line-numbers: false
+all_adae$IDsource <- match(all_adae$source, nodes$name) - 1
+all_adae$IDtarget <- match(all_adae$target, nodes$name) - 1
+```
+
+<br/>
+
+::: {style="font-size: 0.50em"}
+```{r}
+#| echo: false
+knitr::kable(all_adae %>% head(10))
+```
+:::
+
+<br> <br> <br> <br> <br> <br> ---
+
+## sankeyNetwork function {.title-slide .smaller}
+
+::: columns
+::: {.column width="25%"}
+<br/> <br/>
+
+```{r}
+#| echo: true
+#| code-line-numbers: false
+sankey <- sankeyNetwork(
+  Links = all_adae,
+  Nodes = nodes,
+  Source = "IDsource",
+  Target = "IDtarget",
+  Value = "value",
+  NodeID = "name",
+  colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"),
+  fontSize = 15,
+  nodeWidth = 30,
+  sinksRight = T,
+  nodePadding = 7,
+  height = "1000px",
+  width = "1900px",
+  LinkGroup = "source",
+  fontFamily = "Aerial"
+)
+```
+:::
+
+::: {.column width="75%"}
+![](img/sankey2.png){fig-align="center"}
+
+<br> <br> <br> <br>
+:::
+:::
+
+<br> <br> <br> <br>
+
+------------------------------------------------------------------------
+
+## Sankey Diagram {.title-slide .smaller}
+
+![](img/sankey_mp4.mp4){fig-align="center"}
+
+<br/> <br/> <br/>
+
+## Interactive Node and Link Information {.title-slide .smaller}
+
+<br/>
+
+-   When hovered over a node, the label will display the node's category along with the number of subjects in that category (e.g.,).
+
+[Placebo18]{style="font-weight:bold;background-color:#ccddeb;"}
+
+<br/>
+
+-   When hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,).
+
+[Placebo -\> GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS]{style="font-weight:bold;background-color:#ccddeb;"} <br/> [12]{style="font-weight:bold;background-color:#ccddeb;"}
+
+<br/> <br/> <br/> <br/> <br/> <br/>
+
+## Include LinkGroup = [`source`]{style="color: red !important;"} in Sankey function {.title-slide .smaller}
+
+<br/>
+
+::: columns
+::: {.column width="25%"}
+<br>
+
+```{r}
+#| echo: true
+#| code-line-numbers: '|15'
+
+sankey <- sankeyNetwork(
+  Links = all_adae,
+  Nodes = nodes,
+  Source = "IDsource",
+  Target = "IDtarget",
+  Value = "value",
+  NodeID = "name",
+  colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"),
+  fontSize = 15,
+  nodeWidth = 30,
+  sinksRight = T,
+  nodePadding = 7,
+  height = "1000px",
+  width = "1900px",
+  LinkGroup = "source",
+  fontFamily = "Aerial"
+)
+```
+:::
+
+::: {.column width="75%"}
+![](img/sankey1.png){fig-align="right"}
+:::
+:::
+
+<br> <br> <br> ---
+
+## Grouping Behavior and Color Assignment in LinkGroup {.title-slide .smaller}
+
+<br/>
+
+::: columns
+::: {.column width="25%"}
+::: {style="font-size: 17px"}
+-   Note: When we set LinkGroup = "source", the expectation is that each treatment group where the flow originates will be assigned a different color. <br/>
+
+-   However, as seen in the previous slide, both "Xanomeline High Dose" and "Xanomeline Low Dose" share the same color. <br/>
+
+-   This occurs because the grouping logic uses the first word in the label, and since both groups start with "Xanomeline," they are assigned the same color. Similarly, the AEDECOD values that begin with "Application" also share the same color, even though we expect different colors for each unique value. <br/>
+
+-   This happens due to the same grouping behavior based on the first word.
+:::
+:::
+
+::: {.column width="75%"}
+![](img/sankey3.png){fig-align="right"}
+:::
+:::
+
+<br> <br> <br> ---
+
+## Include LinkGroup = [`target`]{style="color: red !important;"} in Sankey function {.title-slide .smaller}
+
+<br/>
+
+::: columns
+::: {.column width="25%"}
+<br>
+
+```{r}
+#| echo: true
+#| code-line-numbers: '|15'
+
+sankey <- sankeyNetwork(
+  Links = all_adae,
+  Nodes = nodes,
+  Source = "IDsource",
+  Target = "IDtarget",
+  Value = "value",
+  NodeID = "name",
+  colourScale = JS("d3.scaleOrdinal(d3.schemeCategory10);"),
+  fontSize = 15,
+  nodeWidth = 30,
+  sinksRight = T,
+  nodePadding = 7,
+  height = "1000px",
+  width = "1900px",
+  LinkGroup = "target",
+  fontFamily = "Aerial"
+)
+```
+:::
+
+::: {.column width="75%"}
+![](img/sankey4.png){fig-align="right"}
+:::
+:::
+
+<br> <br> <br> ---
+
+## plotly {.title-slide .smaller auto-animate="true"}
+
+<br/>
+
+```{r}
+#| echo: false
+library(plotly)
+```
+
+::: columns
+::: {.column width="40%" height="90%"}
+```{r}
+#| echo: true
+#| code-line-numbers: '|2|10-11|23-26'
+fig <- plot_ly(
+  type = "sankey",
+  domain = list(
+    x = c(0, 1),
+    y = c(0, 1)
+  ),
+  orientation = "h",
+  valueformat = ".0f",
+  valuesuffix = "TWh",
+  node = list(
+    label = nodes$name,
+    pad = 15,
+    thickness = 15,
+    line = list(
+      color = "black",
+      width = 0.5
+    ),
+    font = list(
+      color = "black", # Node font color
+      size = 20
+    )
+  ),
+  link = list(
+    source = all_adae$IDsource,
+    target = all_adae$IDtarget,
+    value = all_adae$value
+  )
+)
+```
+:::
+
+::: {.column width="10%"}
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: true
+#| code-line-numbers: '|1-10'
+
+fig <- fig %>% layout(
+  # title = "Sankey Diagram",
+  font = list(
+    size = 15,
+    color = "black",
+    shadow = "auto"
+  ),
+  xaxis = list(showgrid = F, zeroline = F),
+  yaxis = list(showgrid = F, zeroline = F)
+)
+```
+:::
+:::
+
+<br/> <br/> <br/> <br/>
+
+## Sanket Diagram using plotly {.title-slide .smaller}
+
+![](img/sankey_plotly.mp4)
+
+<br/> <br/> <br/> <br/>
+
+## Interactive Node and Link Information {.title-slide .smaller}
+
+<br/>
+
+-   When hovered over a node, the label will display the node's category along with the number of subjects in that category (e.g.,).
+
+![](img/label1.png){fig-align="center"}
+
+-   When hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,).
+
+![](img/label2.png){fig-align="center"}
+
+<br/> <br/>
+
+## Preprocessing Data for ggalluvial <br> (An Extension of ggplot2) {.title-slide .smaller}
+
+<br/>
+
+```{r}
+#| echo: false
+library(ggalluvial)
+```
+
+```{r}
+#| echo: true
+#| code-line-numbers: false
+
+adae1 <- adae_filtered %>%
+  rename_all(tolower) %>%
+  select(usubjid, aesoc, aedecod, trta, aesev) %>%
+  unique() %>%
+  group_by(aesoc, aedecod, trta, aesev) %>%
+  count()
+```
+
+<br/>
+
+::: {style="font-size: 0.50em"}
+```{r}
+#| echo: false
+knitr::kable(adae1 %>% head(10))
+```
+:::
+
+<br/> <br/> <br/>
+
+## ggalluvial (Cont.) {.title-slide .smaller}
+
+<br/>
+
+::: fragment
+```{r}
+#| echo: true
+#| code-line-numbers: "|1|2|5"
+
+g <- ggplot(adae1, aes(y = n, axis1 = trta, axis2 = aesoc, axis3 = aedecod, axis4 = aesev)) +
+  geom_alluvium(aes(fill = trta), width = 4 / 12) +
+  geom_stratum(alpha = .5, fill = "white") +
+  geom_text(stat = "stratum", size = 1.6, color = "black", fontface = "bold", aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("Treatment", "SOC", "Preferred Term", "Severity"), expand = c(0.1, 0.1)) +
+  theme_classic() +
+  guides(fill = guide_legend(title = "Teatment:")) +
+  theme(
+    axis.title.y = element_blank(), # Remove y-axis title
+    axis.text.y = element_blank(), # Remove y-axis text
+    axis.ticks.y = element_blank(), # Remove y-axis ticks
+    axis.line.y = element_blank(),
+    axis.line.x = element_blank(),
+    axis.text = element_text(size = 10)
+  )
+```
+
+<br/>
+
+::: {style="font-size: 25px"}
+-   This code creates an alluvial plot that visualizes the flow of subjects through different categories: trta (treatment), aesoc (system organ class), aedecod (preferred term), and aesev (severity).
+
+-   The nodes are labeled, and the appearance of the plot is customized for clarity and presentation.
+:::
+:::
+
+<br/> <br/> <br/>
+
+## ggalluvial (Cont.) {.title-slide .smaller}
+
+
+![](img/Rplot.png){fig-align="center" width="100%" height='100%'}
+
+<br/> <br/>
+
+## Comparison {.title-slide .smaller}
+
+::: rows
+::: {.row height="25%"}
+::: {.column width="25%"}
+**Characteristics**
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+**sankeyNetwork (networkD3)**
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+**plot_ly(plotly)**
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+**ggalluvial (ggplot2 extension)**
+:::
+:::
+
+::: {style="font-size: 23px"}
+::: {.row height="25%"}
+::: {.column width="25%"}
+-   Appearance
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Simple and clean. Customizable node and link colors.
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Highly customizable with various color scales, labels, and hover text.
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Primarily static images.
+:::
+:::
+
+::: {.row height="25%"}
+::: {.column width="25%"}
+-   Interactivity
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Nodes and links can be clicked and dragged. Tooltips on hover display node and link information.
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Highly interactive with hover effects, tooltips, and click events. Can zoom and pan the plot.
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Less interactive compared to the other two.
+:::
+:::
+
+::: {.row height="25%"}
+::: {.column width="25%"}
+-   Customization
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Tooltips or labels show link values or other relevant data when hovering
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Node labels and link values can be customized, including font size and color.
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="20%"}
+Labels are fixed to the plot. We cannot hover to see additional information.
+:::
+:::
+:::
+:::
+
+<br/> <br/>
+
+## Conclusion {.title-slide .smaller}
+
+-   Interactivity: For highly interactive and exploratory data analysis, NetworkD3 and Plotly are preferable. NetworkD3 offers more dynamic node manipulation, while Plotly provides better integration with other interactive plots and dashboards. <br/> <br/>
+-   Static Visualization: For static, high-quality visualizations suitable for reports and publications, ggalluvial is the best choice due to its compatibility with ggplot2 and the extensive customization options. <br/> <br/>
+-   Each approach has its strengths and is suitable for different use cases, from interactive web-based dashboards to static, publication-ready visualizations. <br/> <br/>
+-   By using the ADAE dataset, we demonstrated the ability of each tool to effectively visualize the flow of treatment-emergent adverse events through different stages, such as SOC and PT by maximum severity, providing insights into the distribution and severity of adverse events across different treatments.
+
+<br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+
+# 
+
+::: columns
+::: {.column width="50%"}
+<br/> <br/>
+
+## Thank you! {.thank-you}
+
+[Presentation Link](https://jagadishkatam.github.io/SankeySlides/sankey.html)
+
+:::
+
+::: {.column width="50%"}
+<br/> <br/> <br/> <br/>
+
+![](img/linkedin.png){.right-align}
+:::
+:::
