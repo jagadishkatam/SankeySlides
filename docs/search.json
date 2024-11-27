@@ -46,14 +46,14 @@
     "href": "sankey.html#sankey-diagram",
     "title": "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization",
     "section": "Sankey Diagram",
-    "text": "Sankey Diagram\n\n\nVideo"
+    "text": "Sankey Diagram\n\n\nVideo\n\n\n  \n##Interactive Node and Link Information {.title-slide .smaller}\n\n\nWhen hovered over a node, the label will display the node’s category along with the number of subjects in that category (e.g.,).\n\nPlacebo18\n\n\nWhen hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,).\n\nPlacebo -&gt; GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS  12"
   },
   {
     "objectID": "sankey.html#interactive-node-and-link-information",
     "href": "sankey.html#interactive-node-and-link-information",
     "title": "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization",
     "section": "Interactive Node and Link Information",
-    "text": "Interactive Node and Link Information\n\n\nWhen hovered over a node, the label will display the node’s category along with the number of subjects in that category (e.g.,).\n\nPlacebo18\n\n\nWhen hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,).\n\nPlacebo -&gt; GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS  12"
+    "text": "Interactive Node and Link Information\n\n\nWhen hovered over a node, the label will display the node’s category along with the number of subjects in that category (e.g.,).\n\n\n\n\n\n\n\nWhen hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,)."
   },
   {
     "objectID": "sankey.html#include-linkgroup-source-in-sankey-function",
@@ -74,7 +74,7 @@
     "href": "sankey.html#include-linkgroup-target-in-sankey-function",
     "title": "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization",
     "section": "Include LinkGroup = target in Sankey function",
-    "text": "Include LinkGroup = target in Sankey function\n\n\n\n\n\nsankey &lt;- sankeyNetwork(\n  Links = all_adae,\n  Nodes = nodes,\n  Source = \"IDsource\",\n  Target = \"IDtarget\",\n  Value = \"value\",\n  NodeID = \"name\",\n  colourScale = JS(\"d3.scaleOrdinal(d3.schemeCategory10);\"),\n  fontSize = 15,\n  nodeWidth = 30,\n  sinksRight = T,\n  nodePadding = 7,\n  height = \"1000px\",\n  width = \"1900px\",\n  LinkGroup = \"target\",\n  fontFamily = \"Aerial\"\n)\n\n\n\n\n\n\n\n\n   —"
+    "text": "Include LinkGroup = target in Sankey function\n\n\n\n\n\nsankey &lt;- sankeyNetwork(\n  Links = all_adae,\n  Nodes = nodes,\n  Source = \"IDsource\",\n  Target = \"IDtarget\",\n  Value = \"value\",\n  NodeID = \"name\",\n  colourScale = JS(\"d3.scaleOrdinal(d3.schemeCategory10);\"),\n  fontSize = 15,\n  nodeWidth = 30,\n  sinksRight = T,\n  nodePadding = 7,\n  height = \"1000px\",\n  width = \"1900px\",\n  LinkGroup = \"target\",\n  fontFamily = \"Aerial\"\n)\n\n\n\n\n\n\n\n\n   —\n###plotly {.title-slide .smaller auto-animate=“true”}\n\n\n\n\nfig &lt;- plot_ly(\n  type = \"sankey\",\n  domain = list(\n    x = c(0, 1),\n    y = c(0, 1)\n  ),\n  orientation = \"h\",\n  valueformat = \".0f\",\n  valuesuffix = \"TWh\",\n  node = list(\n    label = nodes$name,\n    pad = 15,\n    thickness = 15,\n    line = list(\n      color = \"black\",\n      width = 0.5\n    ),\n    font = list(\n      color = \"black\", # Node font color\n      size = 20\n    )\n  ),\n  link = list(\n    source = all_adae$IDsource,\n    target = all_adae$IDtarget,\n    value = all_adae$value\n  )\n)\n\n\n\n\n\nfig &lt;- fig %&gt;% layout(\n  # title = \"Sankey Diagram\",\n  font = list(\n    size = 15,\n    color = \"black\",\n    shadow = \"auto\"\n  ),\n  xaxis = list(showgrid = F, zeroline = F),\n  yaxis = list(showgrid = F, zeroline = F)\n)"
   },
   {
     "objectID": "sankey.html#plotly",
@@ -137,7 +137,7 @@
     "href": "sankey.html#thank-you",
     "title": "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization",
     "section": "Thank you!",
-    "text": "Thank you!\nPresentation Link"
+    "text": "Thank you!\nSlides   Click Here"
   },
   {
     "objectID": "about.html",
@@ -145,5 +145,12 @@
     "title": "About",
     "section": "",
     "text": "About this site"
+  },
+  {
+    "objectID": "sankey.html#section",
+    "href": "sankey.html#section",
+    "title": "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization",
+    "section": "",
+    "text": "Thank you!\n\n \n   jagadishkatam.github.io"
   }
 ]
