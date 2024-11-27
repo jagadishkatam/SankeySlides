@@ -4,8 +4,8 @@ h1.title {
     color: #007bff;
 }
 
-.reveal footer .author {
-    font-size: 10px !important;  /* Forces the style to apply */
+.reveal .author .footer {
+    font-size: 20px !important;  /* Forces the style to apply */
     color: #a464244f !important;      /* Optional */
 }
 
@@ -21,8 +21,8 @@ h1.title {
     background-image: url('img/LOGO-2.png'); /* Path to your logo */
     background-size: contain; /* Maintain the aspect ratio */
     background-repeat: no-repeat;
-    width: 100px;   /* Set the width to adjust the size */
-    height: 60px;   /* Set the height to adjust the size */
+    width: 110px;   /* Set the width to adjust the size */
+    height: 70px;   /* Set the height to adjust the size */
     opacity: 0.8;   /* Optional: adjust transparency */
 }
 
@@ -30,7 +30,7 @@ h1.title {
 .reveal .slides::before {
     content: '';  /* Empty content to ensure we can insert an image */
     position: fixed;
-    top: 0px;   /* Distance from the top */
+    top: 5px;   /* Distance from the top */
     right: -150px; /* Distance from the right edge */
     z-index: 1000; /* Ensure the logo stays on top of slides */
     
@@ -40,7 +40,7 @@ h1.title {
     background-repeat: no-repeat;
     width: 100px;   /* Set the width to adjust the size */
     height: 60px;   /* Set the height to adjust the size */
-    opacity: 0.8;   /* Optional: adjust transparency */
+    opacity: 1;   /* Optional: adjust transparency */
 }
 
 
@@ -70,8 +70,4 @@ h1.title {
 .reveal .figure img {
     width: 80%;      /* Scale specific figure width */
     margin: 0 auto;  /* Center the image */
-}
-
-.reveal .footer {
-    font-size: 8px !important; /* Adjust the size as needed */
 }

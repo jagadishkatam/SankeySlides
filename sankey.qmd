@@ -1,13 +1,11 @@
 ---
 title: "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization"
-subtitle: '     '
-date: '20-Jan-2025'
-author: "Jagadish Katam"
-footer: "© 2024 Princeps Technologies All Rights Reserved."
+subtitle: '<br>Phuse Wednesday Webinar<br>'
+author: "<strong>Jagadish Katam</strong><br>29 Dec2 2025"
+footer: "<strong>[© 2024 Princeps Technologies All Rights Reserved.](https://www.princepstech.com/contact-us/)</strong>"
 format: 
   revealjs:
     multiplex: true
-    preview-links: auto
     css: custom.css
     transition: slide
     background-transition: fade
@@ -103,7 +101,7 @@ knitr::kable(adae_filtered %>% head(10))
 
 <br/>
 
-::: columns
+::::: columns
 ::: {.column width="50%" style="font-size: 20px"}
 ```{r}
 #| echo: true
@@ -133,7 +131,7 @@ all_adae <- bind_rows(adae1, adae2, adae3) %>% as.data.frame() %>%
   select(source, target, value)
 ```
 :::
-:::
+:::::
 
 <br/>
 
@@ -152,8 +150,8 @@ knitr::kable(all_adae %>% head(10))
 
 <br/>
 
-::: columns
-::: {.column width="40%"}
+:::::::: columns
+:::: {.column width="40%"}
 ```{r}
 #| echo: true
 #| code-line-numbers: false
@@ -177,20 +175,20 @@ nodes <-
 -   Matching Source and Target IDs
 -   Assign unique IDs to the source and target nodes.
 :::
-:::
+::::
 
 ::: {.column width="5%"}
 :::
 
-::: {.column width="55%"}
+:::: {.column width="55%"}
 ::: {style="font-size: 0.50em"}
 ```{r}
 #| echo: false
 knitr::kable(nodes )
 ```
 :::
-:::
-:::
+::::
+::::::::
 
 <br> <br>
 
@@ -220,7 +218,7 @@ knitr::kable(all_adae %>% head(10))
 
 ## sankeyNetwork function {.title-slide .smaller}
 
-::: columns
+::::: columns
 ::: {.column width="25%"}
 <br/> <br/>
 
@@ -248,11 +246,11 @@ sankey <- sankeyNetwork(
 :::
 
 ::: {.column width="75%"}
-![](img/sankey2.png){fig-align="center"}
+![](img/sankey2.png){fig-align="center" width="100%"}
 
 <br> <br> <br> <br>
 :::
-:::
+:::::
 
 <br> <br> <br> <br>
 
@@ -260,11 +258,11 @@ sankey <- sankeyNetwork(
 
 ## Sankey Diagram {.title-slide .smaller}
 
-![](img/sankey_mp4.mp4){fig-align="center"}
+![](img/sankey_mp4.mp4){fig-align="center" width="1200"}
 
 <br/> <br/> <br/>
 
-## Interactive Node and Link Information {.title-slide .smaller}
+##Interactive Node and Link Information {.title-slide .smaller}
 
 <br/>
 
@@ -284,7 +282,7 @@ sankey <- sankeyNetwork(
 
 <br/>
 
-::: columns
+::::: columns
 ::: {.column width="25%"}
 <br>
 
@@ -313,9 +311,9 @@ sankey <- sankeyNetwork(
 :::
 
 ::: {.column width="75%"}
-![](img/sankey1.png){fig-align="right"}
+![](img/sankey1.png){fig-align="right" width="100%"}
 :::
-:::
+:::::
 
 <br> <br> <br> ---
 
@@ -323,8 +321,8 @@ sankey <- sankeyNetwork(
 
 <br/>
 
-::: columns
-::: {.column width="25%"}
+:::::: columns
+:::: {.column width="25%"}
 ::: {style="font-size: 17px"}
 -   Note: When we set LinkGroup = "source", the expectation is that each treatment group where the flow originates will be assigned a different color. <br/>
 
@@ -334,12 +332,12 @@ sankey <- sankeyNetwork(
 
 -   This happens due to the same grouping behavior based on the first word.
 :::
-:::
+::::
 
 ::: {.column width="75%"}
-![](img/sankey3.png){fig-align="right"}
+![](img/sankey3.png){fig-align="right" width="100%" height="100%"}
 :::
-:::
+::::::
 
 <br> <br> <br> ---
 
@@ -347,7 +345,7 @@ sankey <- sankeyNetwork(
 
 <br/>
 
-::: columns
+::::: columns
 ::: {.column width="25%"}
 <br>
 
@@ -376,13 +374,13 @@ sankey <- sankeyNetwork(
 :::
 
 ::: {.column width="75%"}
-![](img/sankey4.png){fig-align="right"}
+![](img/sankey4.png){fig-align="right" width="100%"}
 :::
-:::
+:::::
 
 <br> <br> <br> ---
 
-## plotly {.title-slide .smaller auto-animate="true"}
+###plotly {.title-slide .smaller auto-animate="true"}
 
 <br/>
 
@@ -391,7 +389,7 @@ sankey <- sankeyNetwork(
 library(plotly)
 ```
 
-::: columns
+:::::: columns
 ::: {.column width="40%" height="90%"}
 ```{r}
 #| echo: true
@@ -447,13 +445,13 @@ fig <- fig %>% layout(
 )
 ```
 :::
-:::
+::::::
 
 <br/> <br/> <br/> <br/>
 
 ## Sanket Diagram using plotly {.title-slide .smaller}
 
-![](img/sankey_plotly.mp4)
+![](img/sankey_plotly.mp4){width="100%"}
 
 <br/> <br/> <br/> <br/>
 
@@ -463,11 +461,11 @@ fig <- fig %>% layout(
 
 -   When hovered over a node, the label will display the node's category along with the number of subjects in that category (e.g.,).
 
-![](img/label1.png){fig-align="center"}
+![](img/label1.png){fig-align="center" width="20%"}
 
 -   When hovered over a link, the label will display the category of the source node and the category of the target node, followed by the number of subjects transitioning from one category to the next (e.g.,).
 
-![](img/label2.png){fig-align="center"}
+![](img/label2.png){fig-align="center" width="50%"}
 
 <br/> <br/>
 
@@ -507,7 +505,7 @@ knitr::kable(adae1 %>% head(10))
 
 <br/>
 
-::: fragment
+:::: fragment
 ```{r}
 #| echo: true
 #| code-line-numbers: "|1|2|5"
@@ -536,21 +534,20 @@ g <- ggplot(adae1, aes(y = n, axis1 = trta, axis2 = aesoc, axis3 = aedecod, axis
 
 -   The nodes are labeled, and the appearance of the plot is customized for clarity and presentation.
 :::
-:::
+::::
 
 <br/> <br/> <br/>
 
 ## ggalluvial (Cont.) {.title-slide .smaller}
 
+![](img/Rplot.png){fig-align="right" width="100%" height="100%"}
 
-![](img/Rplot.png){fig-align="center" width="100%" height='100%'}
-
-<br/> <br/>
+<br/> <br/> <br/> <br/>
 
 ## Comparison {.title-slide .smaller}
 
-::: rows
-::: {.row height="25%"}
+:::::::::::::::::::::::::::::::::::: rows
+:::::::::: {.row height="25%"}
 ::: {.column width="25%"}
 **Characteristics**
 :::
@@ -575,10 +572,10 @@ g <- ggplot(adae1, aes(y = n, axis1 = trta, axis2 = aesoc, axis3 = aedecod, axis
 ::: {.column width="20%"}
 **ggalluvial (ggplot2 extension)**
 :::
-:::
+::::::::::
 
-::: {style="font-size: 23px"}
-::: {.row height="25%"}
+::::::::::::::::::::::::::: {style="font-size: 23px"}
+:::::::::: {.row height="25%"}
 ::: {.column width="25%"}
 -   Appearance
 :::
@@ -603,9 +600,9 @@ Highly customizable with various color scales, labels, and hover text.
 ::: {.column width="20%"}
 Primarily static images.
 :::
-:::
+::::::::::
 
-::: {.row height="25%"}
+:::::::::: {.row height="25%"}
 ::: {.column width="25%"}
 -   Interactivity
 :::
@@ -630,9 +627,9 @@ Highly interactive with hover effects, tooltips, and click events. Can zoom and 
 ::: {.column width="20%"}
 Less interactive compared to the other two.
 :::
-:::
+::::::::::
 
-::: {.row height="25%"}
+:::::::::: {.row height="25%"}
 ::: {.column width="25%"}
 -   Customization
 :::
@@ -657,9 +654,9 @@ Node labels and link values can be customized, including font size and color.
 ::: {.column width="20%"}
 Labels are fixed to the plot. We cannot hover to see additional information.
 :::
-:::
-:::
-:::
+::::::::::
+:::::::::::::::::::::::::::
+::::::::::::::::::::::::::::::::::::
 
 <br/> <br/>
 
@@ -672,21 +669,25 @@ Labels are fixed to the plot. We cannot hover to see additional information.
 
 <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
 
-# 
+##
 
-::: columns
+::::: columns
 ::: {.column width="50%"}
 <br/> <br/>
 
-## Thank you! {.thank-you}
+<p style="font-size: 90px; color: #007bff">Thank you!</p>
 
-[Presentation Link](https://jagadishkatam.github.io/SankeySlides/sankey.html)
+<br/> <br/> 
+
+`r fontawesome::fa(c("slideshare"), "black")` &nbsp; 
+[jagadishkatam.github.io](https://jagadishkatam.github.io/SankeySlides/sankey.html#/title-slide){style='font-size: 40px; text-align=left; color: black' }
 
 :::
 
 ::: {.column width="50%"}
-<br/> <br/> <br/> <br/>
+<br/> <br/> <br/> 
 
-![](img/linkedin.png){.right-align}
+![](img/linkedin.png){style='font-size: 35px' fig-align='center' width="50%"}
+
 :::
-:::
+:::::
