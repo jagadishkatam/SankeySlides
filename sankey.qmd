@@ -5,11 +5,14 @@ author: "<strong>Jagadish Katam</strong><br>29-Jan-2025"
 footer: "<strong>[© 2024 Princeps Technologies All Rights Reserved.](https://www.princepstech.com/)</strong>"
 format: 
   revealjs:
+    pdf: true
     multiplex: true
     css: custom.css
     transition: slide
     background-transition: fade
     highlight-style: ayu-mirage
+    slideWidth: 1920
+    slideHeight: 1080
 from: markdown+emoji
 execute:
   echo: true
@@ -260,7 +263,7 @@ sankey <- sankeyNetwork(
 
 <br/> <br/> <br/>
 
-##Interactive Node and Link Information {.title-slide .smaller}
+## Interactive Node and Link Information {.title-slide .smaller}
 
 <br/>
 
@@ -378,7 +381,7 @@ sankey <- sankeyNetwork(
 
 <br> <br> <br> ---
 
-###plotly {.title-slide .smaller auto-animate="true"}
+## plotly {.title-slide .smaller auto-animate="true"}
 
 <br/>
 
@@ -667,25 +670,26 @@ Labels are fixed to the plot. We cannot hover to see additional information.
 
 <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
 
-##
+## 
 
 ::::: columns
 ::: {.column width="50%"}
 <br/> <br/>
 
-<p style="font-size: 90px; color: #007bff">Thank you!</p>
+<p style="font-size: 90px; color: #007bff">
 
-<br/> <br/> 
+Thank you!
 
-`r fontawesome::fa(c("slideshare"), "black")` &nbsp; 
-[jagadishkatam.github.io](https://jagadishkatam.github.io/SankeySlides/sankey.html#/title-slide){style='font-size: 40px; text-align=left; color: black' }
+</p>
 
+<br/> <br/>
+
+`r fontawesome::fa(c("slideshare"), "black")`   [jagadishkatam.github.io](https://jagadishkatam.github.io/SankeySlides/sankey.html#/title-slide){style="font-size: 40px; text-align=left; color: black"}
 :::
 
 ::: {.column width="50%"}
-<br/> <br/> <br/> 
+<br/> <br/> <br/>
 
-![](img/linkedin.png){style='font-size: 35px' fig-align='center' width="50%"}
-
+![](img/linkedin.png){style="font-size: 35px" fig-align="center" width="50%"}
 :::
 :::::
