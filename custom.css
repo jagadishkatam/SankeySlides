@@ -30,7 +30,7 @@ h1.title {
 .reveal .slides::before {
     content: '';  /* Empty content to ensure we can insert an image */
     position: fixed;
-    top: 5px;   /* Distance from the top */
+    top: 10px;   /* Distance from the top */
     right: -150px; /* Distance from the right edge */
     z-index: 1000; /* Ensure the logo stays on top of slides */
     

@@ -5,7 +5,6 @@ author: "<strong>Jagadish Katam</strong><br>29-Jan-2025"
 footer: "<strong>[© 2024 Princeps Technologies All Rights Reserved.](https://www.princepstech.com/)</strong>"
 format: 
   revealjs:
-    pdf: true
     multiplex: true
     css: custom.css
     transition: slide
@@ -674,13 +673,10 @@ Labels are fixed to the plot. We cannot hover to see additional information.
 
 ::::: columns
 ::: {.column width="50%"}
+
 <br/> <br/>
 
-<p style="font-size: 90px; color: #007bff">
-
-Thank you!
-
-</p>
+<p style="font-size: 100px; color: #007bff">Thank you!</p>
 
 <br/> <br/>
 
