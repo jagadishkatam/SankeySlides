@@ -1,6 +1,6 @@
 ---
 title: "Comparative Analysis of Sankey Diagram Generation Using different R packages {netwrokD3}, {plotly}, {ggalluvial} for TEAE Data Visualization"
-subtitle: '<br>Phuse Wednesday Webinar<br>'
+subtitle: '<br>PHUSE Wednesday Webinar<br>'
 author: "<strong>Jagadish Katam</strong><br>29-Jan-2025"
 footer: "<strong>[© 2024 Princeps Technologies All Rights Reserved.](https://www.princepstech.com/)</strong>"
 format: 
